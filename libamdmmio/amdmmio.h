@@ -47,5 +47,5 @@ typedef struct _AMDGPU
 
 int32_t InitGPUByIndex(AMDGPU *GPU, AMD_MMIO_ACCESS_TYPE atype, uint8_t idx);
 int32_t ReadMMIOReg(AMDGPU *GPU, amd_regspace_t regspace, uint32_t reg, uint32_t *outval);
-int32_t WriteMMIOReg(AMDGPU *GPU, uint32_t reg, uint32_t val);
+int32_t WriteMMIOReg(AMDGPU *GPU, amd_regspace_t regspace, uint32_t reg, uint32_t val);
 int32_t FreeGPU(AMDGPU *GPU);

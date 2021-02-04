@@ -64,18 +64,33 @@ int32_t ReadMMIOReg(AMDGPU *GPU, amd_regspace_t regspace, uint32_t reg, uint32_t
 	return(AMD_MMIO_ERR_SUCCESS);
 }
 
-int32_t WriteMMIOReg(AMDGPU *GPU, uint32_t reg, uint32_t val)
+int32_t WriteMMIOReg(AMDGPU *GPU, amd_regspace_t regspace, uint32_t reg, uint32_t val)
 {
+        uint32_t pIndex;
+        uint32_t pData;
+
+        switch (regspace)
+        {
+                case AMD_REGSPACE_SMN :
+                        pIndex = mmSMN_INDEX;
+                        pData = mmSMN_DATA;
+                        break;
+
+                default :
+                        pIndex = mmMM_INDEX;
+                        pData = mmMM_DATA;
+        }
+
 	reg <<= 2;
 	
 	if(GPU->AccessType == AMD_MMIO_ACCESS_TYPE_DEBUGFS)
 	{
-		if(pwrite(GPU->DebugFSInfo.fd, &reg, (size_t)4, (mmMM_INDEX << 2)) != 4)
+		if(pwrite(GPU->DebugFSInfo.fd, &reg, (size_t)4, (pIndex << 2)) != 4)
 		{
 			return(AMD_MMIO_ERR_BACKEND);
 		}
 		
-		if(pwrite(GPU->DebugFSInfo.fd, &val, (size_t)4, (mmMM_DATA << 2)) != 4)
+		if(pwrite(GPU->DebugFSInfo.fd, &val, (size_t)4, (pData << 2)) != 4)
 		{
 			return(AMD_MMIO_ERR_BACKEND);
 		}
